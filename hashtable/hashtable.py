@@ -11,6 +11,9 @@ class HashTableEntry:
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
 
+# we have our hashing function that takes in a string & turns it into a number 
+# we have a function that takes that number & make sure it fits in our array (hash_index)
+# that number is the index in the array we store value in (put) or look up (get)
 
 class HashTable:
     """
@@ -22,7 +25,7 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
-        self.capacity = capacity
+        self.capacity = [None] * MIN_CAPACITY
 
     def my_hashing_function(self, s): # refactor this, its okay but not good
         self.s = s
@@ -91,9 +94,13 @@ class HashTable:
         between within the storage capacity of the hash table.
         """
         #return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        #changed self.capacity to len(self.capacity) due to error:
+        # unsupported operand type(s) for %: 'int' and 'list' 
+        return self.djb2(key) % len(self.capacity)
 
+    # O(1)
     def put(self, key, value):
+
         """
         Store the value with the given key.
 
@@ -102,6 +109,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Get slot number with key
+        slot = self.hash_index(key)
+        
+        # Use key to create entry value 
+        entry = HashTableEntry(key, value)
+        # assign value to slot 
+        self.capacity[slot] = entry
+
 
 
     def delete(self, key):
@@ -113,8 +128,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        self.put(key, None)
 
-
+    # O(1)
     def get(self, key):
         """
         Retrieve the value stored with the given key.
@@ -124,6 +140,16 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # Get slot number with key 
+        slot = self.hash_index(key)
+
+        #check capacity using [slot]
+        entry = self.capacity[slot]
+        
+        # if is entry, return (get) value
+        if entry:
+            return entry.value
+        return None
 
 
     def resize(self, new_capacity):
