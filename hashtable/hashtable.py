@@ -24,7 +24,7 @@ class HashTable:
         # Your code here
         self.capacity = capacity
 
-    def my_hashing_function(self, s):
+    def my_hashing_function(self, s): # refactor this, its okay but not good
         self.s = s
         # Turn input string into bytes using encode
         string_bytes = s.encode()
@@ -49,7 +49,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        # return self % len(data)
+        # hash_val = my_hashing_function(self)
+        # return hash_val % len(MIN_CAPACITY)
 
 
     def get_load_factor(self):
@@ -78,6 +79,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for x in key:
+            hash = (( hash << 5) + hash) + ord(x)
+        return hash & 0xFFFFFFFF
 
 
     def hash_index(self, key):
