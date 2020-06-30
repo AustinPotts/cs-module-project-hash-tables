@@ -22,6 +22,20 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = capacity
+
+    def my_hashing_function(self, s):
+        self.s = s
+        # Turn input string into bytes using encode
+        string_bytes = s.encode()
+
+        # Sum - Add all the bytes as one value
+        total = 0
+
+        for b in string_bytes:
+            total += b
+        return total
+
 
 
     def get_num_slots(self):
@@ -35,6 +49,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # return self % len(data)
 
 
     def get_load_factor(self):
