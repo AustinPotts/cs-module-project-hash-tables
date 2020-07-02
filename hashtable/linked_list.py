@@ -1,6 +1,9 @@
+# Create Data Structure to represent Node
 class Node:
     def __init__(self, value=None, next_node=None):
+        # Has room for the value 
         self.value = value 
+        # Has room for the next node 
         self.next_node = next_node
 
     def get_value(self):
@@ -10,8 +13,11 @@ class Node:
     def set_next(self,new_next):
         self.next_node = new_next
 
+# It's really common to have an outer class that wraps up the linked list 
+# Object that represents the Linked List 
 class LinkedList:
     def __init__(self):
+        # Indicating the linked list is empty 
         self.head = None 
         self.tail = None
 
@@ -60,16 +66,18 @@ class LinkedList:
         self.tail.set_next(None)
         return value
         
+     # find the node value    
     def contains(self,value):
         if not self.head:
-            return False
+            return None
 
         current = self.head
+        # Walk the linked list 
         while current:
             if current.get_value() == value:
-                return True
+                return current # Return the node 
             current = current.get_next()
-        return False
+        return None # Return None if fail
 
     def get_max(self):
         if not self.head:
@@ -81,3 +89,25 @@ class LinkedList:
                 max_value = current.get_value()
             current = current.get_next()
         return max_value
+    
+    # From Beej Lecture 
+    def delete(self, value):
+        cur = self.head
+            
+        # Special case of deleting the head of the list
+        if cur.value == value:
+            self.head = self.head.next_node
+            return cur
+                
+        # General case
+        prev = cur
+        cur = cur.next_node
+            
+        while cur is not None:
+            if cur.value == value:  # Delete this one
+                prev.next_node = cur.next_node   # Cuts out the old node
+                return cur
+            else:
+                prev = prev.next_node
+                cur = cur.next_node
+        return None
