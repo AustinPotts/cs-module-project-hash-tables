@@ -12,8 +12,8 @@ class HashTableEntry:
 MIN_CAPACITY = 8
 
 # we have our hashing function that takes in a string & turns it into a number 
-# we have a function that takes that number & make sure it fits in our array (hash_index)
-# that number is the index in the array we store value in (put) or look up (get)
+# we have a function that takes that number & make sure it fits in our array, finds index spot (hash_index) aka SLOT
+# that number is the index in the array we store value in (put) or look up
 
 class HashTable:
     """
@@ -53,7 +53,7 @@ class HashTable:
         """
         # Your code here
         # hash_val = my_hashing_function(self)
-        # return hash_val % len(MIN_CAPACITY)
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -73,6 +73,15 @@ class HashTable:
         """
 
         # Your code here
+        seed = 0
+        FNV_prime = 1099511628211
+        offset_basis = 14695981039346656037
+
+        hash = offset_basis + seed
+        for char in key:
+            hash = hash * FNV_prime
+            hash = hash ^ ord(char)
+        return hash
 
 
     def djb2(self, key):
@@ -97,6 +106,7 @@ class HashTable:
         #changed self.capacity to len(self.capacity) due to error:
         # unsupported operand type(s) for %: 'int' and 'list' 
         return self.djb2(key) % len(self.capacity)
+        # return self.fnv1(key) % len(self.capacity)
 
     # O(1)
     def put(self, key, value):
