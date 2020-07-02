@@ -21,6 +21,18 @@ class LinkedList:
         self.head = None 
         self.tail = None
 
+
+    def __str__(self):
+        r = ""
+        cur = self.head
+        
+        while cur is not None:
+            r += f'({cur.value})'
+            if cur.next is not None:
+                r += ' -> '
+            cur = cur.next
+        return r
+
     def add_to_tail(self,value):
         new_node = Node(value, None)
 
@@ -66,6 +78,10 @@ class LinkedList:
         self.tail.set_next(None)
         return value
         
+    def insert_at_head(self, node):
+        node.next = self.head
+        self.head = node
+        
      # find the node value    
     def contains(self,value):
         if not self.head:
@@ -97,7 +113,7 @@ class LinkedList:
         # Special case of deleting the head of the list
         if cur.value == value:
             self.head = self.head.next_node
-            return cur
+            return cur # Return node
                 
         # General case
         prev = cur
@@ -106,8 +122,8 @@ class LinkedList:
         while cur is not None:
             if cur.value == value:  # Delete this one
                 prev.next_node = cur.next_node   # Cuts out the old node
-                return cur
+                return cur # Return node
             else:
-                prev = prev.next_node
+                prev = prev.next_node # Chase eachother through the list 
                 cur = cur.next_node
-        return None
+        return None # it doesnt exist in the list 

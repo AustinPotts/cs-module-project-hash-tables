@@ -1,3 +1,7 @@
+import sys
+sys.path.append('../hashtable/linked_list')
+from linked_list import LinkedList
+
 class HashTableEntry:
     """
     Linked List hash table key/value pair
@@ -41,9 +45,15 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
+    def __init__(self, capacity = MIN_CAPACITY):
         # Your code here
-        self.capacity = [None] * MIN_CAPACITY
+        # self.capacity = [None] * MIN_CAPACITY (Old) # Goal with linked list is we want to take our hash table that only 
+        # has so many slots in it & isntead of storing hash table entries directly in the slots, we're going to 
+        # store refrences to the hash table entries that have next pointers that point to the next entrty 
+        # we will have a linked list of hash table entries, this will save us when we have collisions 
+        self.storage = [LinkedList()] * MIN_CAPACITY
+        self.count = 0
+        self.capacity = capacity
 
     def my_hashing_function(self, s): # refactor this, its okay but not good
         self.s = s
@@ -81,6 +91,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # number of things stored in the hash table / number of slots in the array 
+        return self.count / self.capacity
 
 
     def fnv1(self, key):
@@ -123,8 +135,8 @@ class HashTable:
         #return self.fnv1(key) % self.capacity
         #changed self.capacity to len(self.capacity) due to error:
         # unsupported operand type(s) for %: 'int' and 'list' 
-        return self.djb2(key) % len(self.capacity)
-        # return self.fnv1(key) % len(self.capacity)
+        # return self.djb2(key) % len(self.capacity)
+        return self.fnv1(key) % len(self.storage)
 
     # O(1)
     def put(self, key, value):
@@ -138,12 +150,25 @@ class HashTable:
         """
         # Your code here
         # Get slot number with key
-        slot = self.hash_index(key)
+      #  slot = self.hash_index(key) (Old)
         
         # Use key to create entry value 
-        entry = HashTableEntry(key, value)
+      #  entry = HashTableEntry(key, value) (old)
         # assign value to slot 
-        self.capacity[slot] = entry
+      #  self.capacity[slot] = entry (old)
+
+        slot = self.hash_index(key)
+        current = self.storage[slot].head
+        while current:
+            if current.key == key:
+                current.value = value
+            current = current.next
+            
+        entry = HashTableEntry(key, value)
+        self.storage[slot].insert_at_head(entry)
+        self.count += 1
+
+
 
 
 
@@ -156,7 +181,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # self.put(key, None) (old)
         self.put(key, None)
+        self.count -= 1
 
     # O(1)
     def get(self, key):
@@ -169,14 +196,22 @@ class HashTable:
         """
         # Your code here
         # Get slot number with key 
-        slot = self.hash_index(key)
+       # slot = self.hash_index(key)   (old)
 
         #check capacity using [slot]
-        entry = self.capacity[slot]
+       # entry = self.capacity[slot]
         
         # if is entry, return (get) value
-        if entry:
-            return entry.value
+       # if entry:
+       #     return entry.value
+       # return None
+
+        slot = self.hash_index(key)
+        current = self.storage[slot].head
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
         return None
 
 
@@ -188,6 +223,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        if self.get_load_factor() > 0.7:
+            old_storage = self.storage
+            self.storage = [LinkedList()] * new_capacity
+            for item in old_storage:
+                current = item.head
+                while current:
+                    self.put(current.key, current.value)
+                    current = current.next
+            self.capacity = new_capacity
 
 
 
