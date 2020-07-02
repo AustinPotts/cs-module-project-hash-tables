@@ -15,6 +15,24 @@ MIN_CAPACITY = 8
 # we have a function that takes that number & make sure it fits in our array, finds index spot (hash_index) aka SLOT
 # that number is the index in the array we store value in (put) or look up
 
+#Put: 
+# Find the slot for the key 
+# Search the linked list for the key
+# if Found, update it
+# if not Found, make a new hash table entry and add it to the list 
+
+# Get:
+# Find the slot for the key 
+# Searched the linked list for the key 
+# if Found return the value 
+# if not found, Return None
+
+# Delete:
+# Find the slot for the key 
+# Search the linked list for the key 
+# If found then delete it from the linked list, then return the deleted node 
+# If not found then return none
+
 class HashTable:
     """
     A hash table that with `capacity` buckets
