@@ -37,6 +37,29 @@ MIN_CAPACITY = 8
 # If found then delete it from the linked list, then return the deleted node 
 # If not found then return none
 
+# Q's to Study:
+# What is a hash table load factor?
+# how do you resize a hash table? why?
+# How hash tables work in general? 
+# What are we trying to solve with hash tables?
+# How to use a cache with hash?
+
+# A's 
+# What are hash tables good at? They search fast, insert & delete fast. 
+# Improving run time complexity 
+
+# What are the sorts of things we can search for? When do we want to search for them quickly?
+# Anything that can be hashed, we can use it to store & retireve the results of slow operations 
+# not just searches but also functions that take long computation, you can use it as a cache 
+
+# Think To Fix: Where am I doing a lot of calcualtion here, where I can save that calculation for future reference?
+
+# Cache Implementation: Create Cache -> cache = {} , 
+# Check if Cache is empty -> if n not in cache: cache[n] = fib(n-1) + fib(n-2)
+# After check the cache, we have the values in our cache so we can just -> return cache 
+
+
+
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -47,7 +70,8 @@ class HashTable:
 
     def __init__(self, capacity = MIN_CAPACITY):
         # Your code here
-        # self.capacity = [None] * MIN_CAPACITY (Old) # Goal with linked list is we want to take our hash table that only 
+        # self.capacity = [None] * MIN_CAPACITY (Old)
+        # Goal with linked list is we want to take our hash table that only 
         # has so many slots in it & isntead of storing hash table entries directly in the slots, we're going to 
         # store refrences to the hash table entries that have next pointers that point to the next entrty 
         # we will have a linked list of hash table entries, this will save us when we have collisions 
@@ -90,8 +114,17 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+
         # number of things stored in the hash table / number of slots in the array 
+        # anything over 1 is over loading 
+        # anything less than 1 is light loading = better
+        # when computing the load keep track of the count of items in the hash as you go (increment/decrement count)
+        # Hash tables use an array for storage, so the load factor would be the number of occupied slots divided by the length of the array
+        # As the load factor of your hash table increases, so does the likelihood of a collision
+        # Therefore, you need to monitor the load factor and resize your hash table when the load factor gets too large
+        # The load factor can also be too small.
+        # If the hash table is too large for the data that it is storing, then memory is being wasted
+        # you should also resize when the load factor gets too low
         return self.count / self.capacity
 
 
@@ -222,8 +255,10 @@ class HashTable:
 
         Implement this.
         """
+        # we are overloading when the load factor is greater that 0.7
         # Your code here
         if self.get_load_factor() > 0.7:
+            # if the hash table is overloaded, resisze the hash table
             old_storage = self.storage
             self.storage = [LinkedList()] * new_capacity
             for item in old_storage:
@@ -232,6 +267,9 @@ class HashTable:
                     self.put(current.key, current.value)
                     current = current.next
             self.capacity = new_capacity
+
+            # You can see that resizing is an expensive operation, so you don’t want to resize too often. 
+            # However, when we average it out, hash tables are constant time (O(1)) even with resizing.
 
 
 
